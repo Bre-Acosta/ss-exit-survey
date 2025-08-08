@@ -85,8 +85,7 @@ class SurveyFormHandler {
             'value_perception',
             'cancellation_reasons',
             'would_return',
-            'would_refer',
-            'retention_circumstances'
+            'would_refer'
         ];
         
         for (let field of requiredFields) {
