@@ -94,7 +94,7 @@ function doPost(e) {
 }
 
 function doGet(e) {
-  // Handle GET requests (optional - for testing)
+  // Handle GET requests and CORS preflight
   return ContentService
     .createTextOutput(JSON.stringify({
       status: 'success',
