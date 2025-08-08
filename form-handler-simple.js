@@ -86,8 +86,7 @@ class SurveyFormHandler {
             'value_perception',
             'cancellation_reasons',
             'would_return',
-            'would_refer',
-            'retention_circumstances'
+            'would_refer'
         ];
         
         for (let field of requiredFields) {
@@ -101,9 +100,15 @@ class SurveyFormHandler {
     
     async sendToGoogleForm(data) {
         if (!this.googleFormURL || this.googleFormURL === 'YOUR_GOOGLE_FORM_URL_HERE') {
-            // Fallback: show data to user for manual entry
-            this.showDataForManualEntry(data);
-            return;
+            // Fallback: show success message AND provide data for manual entry
+            console.log('Survey response data:', data);
+            
+            // Show data in a copyable format after success message
+            setTimeout(() => {
+                this.showDataForCopy(data);
+            }, 2000);
+            
+            return; // This will trigger the success message in handleSubmit
         }
         
         // Create form data for Google Forms
@@ -149,37 +154,98 @@ class SurveyFormHandler {
         }, 1000);
     }
     
-    showDataForManualEntry(data) {
-        // Show collected data for manual review/entry
+    showDataForCopy(data) {
+        // Format data in spreadsheet-ready format
+        const spreadsheetData = [
+            data.timestamp || new Date().toISOString(),
+            data.overall_experience || '',
+            data.overall_experience_other || '',
+            data.value_perception || '',
+            data.value_perception_comments || '',
+            data.expectations_coaching || '',
+            data.expectations_results || '',
+            data.expectations_program || '',
+            data.expectations_facility || '',
+            data.expectations_community || '',
+            data.cancellation_reasons || '',
+            data.cancellation_reason_other || '',
+            data.would_return || '',
+            data.would_refer || '',
+            data.retention_circumstances || '',
+            data.additional_comments || ''
+        ].join('\t'); // Tab-separated for easy Excel/Sheets pasting
+
         const dataDisplay = document.createElement('div');
-        dataDisplay.className = 'data-display';
+        dataDisplay.className = 'data-copy-display';
         dataDisplay.innerHTML = `
             <div style="
-                background-color: #f0f0f0;
+                background-color: #e8f4f8;
+                border: 2px solid #00A3E1;
                 padding: 20px;
-                border-radius: 5px;
+                border-radius: 10px;
                 margin: 20px 0;
-                font-family: monospace;
-                white-space: pre-wrap;
-                max-height: 300px;
-                overflow-y: auto;
+                text-align: center;
             ">
-                <strong>Survey Response Data:</strong><br><br>
-                ${JSON.stringify(data, null, 2)}
+                <h3 style="color: #00A3E1; margin-bottom: 15px;">📋 Copy Data to Spreadsheet</h3>
+                <p style="margin-bottom: 15px; color: #333;">
+                    Click the button below to copy this response data, then paste it into your Google Sheet.
+                </p>
+                <button onclick="
+                    navigator.clipboard.writeText(this.nextElementSibling.textContent);
+                    this.textContent = 'Copied! ✓';
+                    this.style.backgroundColor = '#28a745';
+                    setTimeout(() => {
+                        this.textContent = 'Copy Data';
+                        this.style.backgroundColor = '#00A3E1';
+                    }, 2000);
+                " style="
+                    background-color: #00A3E1;
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 16px;
+                    font-weight: bold;
+                    margin-bottom: 15px;
+                ">Copy Data</button>
+                <div style="display: none;">${spreadsheetData}</div>
+                <details style="margin-top: 15px;">
+                    <summary style="cursor: pointer; color: #666;">View Raw Data</summary>
+                    <div style="
+                        background-color: #f8f9fa;
+                        padding: 15px;
+                        border-radius: 5px;
+                        margin-top: 10px;
+                        font-family: monospace;
+                        font-size: 12px;
+                        text-align: left;
+                        white-space: pre-wrap;
+                        max-height: 200px;
+                        overflow-y: auto;
+                    ">${JSON.stringify(data, null, 2)}</div>
+                </details>
+                <button onclick="this.parentElement.parentElement.remove()" style="
+                    background-color: #dc3545;
+                    color: white;
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 12px;
+                    margin-top: 15px;
+                ">Close</button>
             </div>
-            <p style="color: #666; font-size: 0.9em;">
-                Google Form integration not configured. Above data can be manually entered into your Google Sheet.
-            </p>
         `;
         
-        this.form.parentNode.insertBefore(dataDisplay, this.form);
+        this.form.parentNode.insertBefore(dataDisplay, this.form.nextSibling);
         
-        // Remove after 30 seconds
+        // Auto-remove after 5 minutes
         setTimeout(() => {
             if (dataDisplay.parentNode) {
                 dataDisplay.parentNode.removeChild(dataDisplay);
             }
-        }, 30000);
+        }, 300000);
     }
     
     showSuccessMessage() {
