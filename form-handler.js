@@ -4,7 +4,7 @@
 class SurveyFormHandler {
     constructor() {
         // Replace with your deployed Google Apps Script web app URL
-        this.scriptURL = 'https://script.google.com/macros/s/AKfycbwFO8Upf5EoWLlNxBXs_jvpyzY7WZpnZyvZ02DtMOFppWIQbSjYIBBW5mg7JYsqYWHKEA/exec';
+        this.scriptURL = 'https://script.google.com/macros/s/AKfycbz5Aat3DClIIMvQraOnhdKVGmAV2AuhgXF1Xudu8Va096nL87nlbh8P9p4ACAF_yhPPcQ/exec';
         this.form = document.getElementById('exitSurvey');
         this.submitBtn = document.querySelector('.submit-btn');
         this.init();
