@@ -15,7 +15,21 @@ function doPost(e) {
     }
     
     // Parse the form data
-    const data = JSON.parse(e.postData.contents);
+    let data;
+    
+    if (e.postData.type === 'application/json') {
+      // Handle JSON data (for fetch requests)
+      data = JSON.parse(e.postData.contents);
+    } else {
+      // Handle form-encoded data (for form submissions)
+      const params = e.parameter || {};
+      if (params.data) {
+        data = JSON.parse(params.data);
+      } else {
+        // If no JSON data parameter, construct from individual parameters
+        data = params;
+      }
+    }
     
     // If this is the first submission, create headers
     if (sheet.getLastRow() === 0) {

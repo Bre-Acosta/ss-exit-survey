@@ -102,25 +102,43 @@ class SurveyFormHandler {
             throw new Error('Google Apps Script URL not configured. Please update the scriptURL in form-handler.js');
         }
         
-        const response = await fetch(this.scriptURL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
+        // Use form submission method instead of fetch to avoid CORS
+        return new Promise((resolve, reject) => {
+            // Create a hidden iframe for the submission
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.name = 'google-script-submit';
+            document.body.appendChild(iframe);
+            
+            // Create a form to submit to Google Apps Script
+            const form = document.createElement('form');
+            form.target = 'google-script-submit';
+            form.method = 'POST';
+            form.action = this.scriptURL;
+            
+            // Add data as form fields
+            const jsonInput = document.createElement('input');
+            jsonInput.type = 'hidden';
+            jsonInput.name = 'data';
+            jsonInput.value = JSON.stringify(data);
+            form.appendChild(jsonInput);
+            
+            // Handle the response
+            iframe.onload = () => {
+                try {
+                    // Clean up
+                    document.body.removeChild(form);
+                    document.body.removeChild(iframe);
+                    resolve({ status: 'success', message: 'Form submitted successfully' });
+                } catch (error) {
+                    reject(new Error('Form submission failed'));
+                }
+            };
+            
+            // Submit the form
+            document.body.appendChild(form);
+            form.submit();
         });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const result = await response.json();
-        
-        if (result.status !== 'success') {
-            throw new Error(result.message || 'Failed to submit survey');
-        }
-        
-        return result;
     }
     
     showSuccessMessage() {
