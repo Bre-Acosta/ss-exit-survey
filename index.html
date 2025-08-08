@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exit Survey - Starting Strength Gyms</title>
+    <style>
+        :root {
+            --ss-blue: #00A3E1;
+            --ss-red: #EE212D;
+            --ss-gray: #707372;
+            --ss-black: #212322;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: var(--ss-black);
+            background-color: var(--white);
+        }
+
+        .header {
+            background-color: var(--ss-black);
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 300px;
+            height: auto;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .intro h1 {
+            color: var(--ss-blue);
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .intro p {
+            color: var(--ss-gray);
+            font-size: 1.1em;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .survey-form {
+            background-color: var(--light-gray);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--ss-blue);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section h2 {
+            color: var(--ss-red);
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        .question label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--ss-black);
+        }
+
+        .radio-group, .checkbox-group {
+            margin-left: 20px;
+        }
+
+        .radio-group label, .checkbox-group label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+            accent-color: var(--ss-blue);
+        }
+
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .matrix-table th, .matrix-table td {
+            padding: 12px;
+            border: 1px solid var(--ss-gray);
+            text-align: center;
+        }
+
+        .matrix-table th {
+            background-color: var(--ss-blue);
+            color: var(--white);
+            font-weight: bold;
+        }
+
+        .matrix-table td:first-child {
+            text-align: left;
+            background-color: var(--white);
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: 2px solid var(--ss-gray);
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--ss-blue);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid var(--ss-gray);
+            border-radius: 5px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--ss-blue);
+        }
+
+        .submit-section {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid var(--ss-blue);
+        }
+
+        .submit-btn {
+            background-color: var(--ss-red);
+            color: var(--white);
+            padding: 15px 40px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #cc1a25;
+        }
+
+        .optional-note {
+            font-style: italic;
+            color: var(--ss-gray);
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 10px;
+            }
+            
+            .survey-form {
+                padding: 20px;
+            }
+            
+            .intro h1 {
+                font-size: 2em;
+            }
+            
+            .matrix-table {
+                font-size: 0.9em;
+            }
+            
+            .matrix-table th, .matrix-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <img src="Memphis-3-line-black-wordmark.png" alt="Starting Strength Gyms" class="logo">
+    </header>
+
+    <div class="container">
+        <div class="intro">
+            <h1>Member Exit Survey</h1>
+            <p>We value your feedback and would appreciate a few minutes of your time to help us improve our services for future members. Your responses are completely confidential and will help us enhance the Starting Strength experience.</p>
+        </div>
+
+        <form class="survey-form" id="exitSurvey">
+            <!-- Section 1: Overall Experience -->
+            <div class="section">
+                <h2>1. Overall Experience</h2>
+                
+                <div class="question">
+                    <label>How would you describe your overall experience with us?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="overall_experience" value="excellent" required> Excellent</label>
+                        <label><input type="radio" name="overall_experience" value="good"> Good</label>
+                        <label><input type="radio" name="overall_experience" value="fair"> Fair</label>
+                        <label><input type="radio" name="overall_experience" value="poor"> Poor</label>
+                        <label><input type="radio" name="overall_experience" value="other"> Other (please specify): <input type="text" name="overall_experience_other" style="margin-left: 10px; width: 200px;"></label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Value Perception -->
+            <div class="section">
+                <h2>2. Value Perception</h2>
+                
+                <div class="question">
+                    <label>Did you feel the service was valuable for the price you paid?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="value_perception" value="yes_very_much" required> Yes, very much</label>
+                        <label><input type="radio" name="value_perception" value="mostly_yes"> Mostly yes</label>
+                        <label><input type="radio" name="value_perception" value="not_really"> Not really</label>
+                        <label><input type="radio" name="value_perception" value="no"> No</label>
+                        <label><input type="radio" name="value_perception" value="not_sure"> Not sure</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <label class="optional-note">(Optional: Please tell us more about your answer)</label>
+                    <textarea name="value_perception_comments" placeholder="Please share any additional thoughts about the value you received..."></textarea>
+                </div>
+            </div>
+
+            <!-- Section 3: Expectations -->
+            <div class="section">
+                <h2>3. Expectations</h2>
+                
+                <div class="question">
+                    <label>Were your expectations met in the following areas?</label>
+                    <table class="matrix-table">
+                        <thead>
+                            <tr>
+                                <th>Area</th>
+                                <th>Yes</th>
+                                <th>Somewhat</th>
+                                <th>No</th>
+                                <th>N/A</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Coaching attention / personalization</td>
+                                <td><input type="radio" name="expectations_coaching" value="yes"></td>
+                                <td><input type="radio" name="expectations_coaching" value="somewhat"></td>
+                                <td><input type="radio" name="expectations_coaching" value="no"></td>
+                                <td><input type="radio" name="expectations_coaching" value="na"></td>
+                            </tr>
+                            <tr>
+                                <td>Physical results / progress</td>
+                                <td><input type="radio" name="expectations_results" value="yes"></td>
+                                <td><input type="radio" name="expectations_results" value="somewhat"></td>
+                                <td><input type="radio" name="expectations_results" value="no"></td>
+                                <td><input type="radio" name="expectations_results" value="na"></td>
+                            </tr>
+                            <tr>
+                                <td>Program structure & pacing</td>
+                                <td><input type="radio" name="expectations_program" value="yes"></td>
+                                <td><input type="radio" name="expectations_program" value="somewhat"></td>
+                                <td><input type="radio" name="expectations_program" value="no"></td>
+                                <td><input type="radio" name="expectations_program" value="na"></td>
+                            </tr>
+                            <tr>
+                                <td>Facility and equipment</td>
+                                <td><input type="radio" name="expectations_facility" value="yes"></td>
+                                <td><input type="radio" name="expectations_facility" value="somewhat"></td>
+                                <td><input type="radio" name="expectations_facility" value="no"></td>
+                                <td><input type="radio" name="expectations_facility" value="na"></td>
+                            </tr>
+                            <tr>
+                                <td>Community and atmosphere</td>
+                                <td><input type="radio" name="expectations_community" value="yes"></td>
+                                <td><input type="radio" name="expectations_community" value="somewhat"></td>
+                                <td><input type="radio" name="expectations_community" value="no"></td>
+                                <td><input type="radio" name="expectations_community" value="na"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Section 4: Additional Questions -->
+            <div class="section">
+                <h2>4. Additional Feedback</h2>
+                
+                <div class="question">
+                    <label>What were the reasons for canceling your membership? (Select all that apply)</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="cancellation_reasons" value="too_expensive"> Too expensive</label>
+                        <label><input type="checkbox" name="cancellation_reasons" value="program_boring"> Program became boring</label>
+                        <label><input type="checkbox" name="cancellation_reasons" value="lack_progress"> Lack of progress</label>
+                        <label><input type="checkbox" name="cancellation_reasons" value="scheduling_conflicts"> Scheduling conflicts</label>
+                        <label><input type="checkbox" name="cancellation_reasons" value="injury_pain"> Injury or pain concerns</label>
+                        <label><input type="checkbox" name="cancellation_reasons" value="conflicts_people"> Conflicts with Coaches or Members</label>
+                        <label><input type="checkbox" name="cancellation_reasons" value="moved"> Moved</label>
+                        <label><input type="checkbox" name="cancellation_reasons" value="too_difficult"> Program was too difficult</label>
+                        <label><input type="checkbox" name="cancellation_reasons" value="other"> Other: <input type="text" name="cancellation_reason_other" style="margin-left: 10px; width: 200px;" placeholder="Please specify..."></label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <label>Would you ever consider coming back?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="would_return" value="definitely" required> Definitely</label>
+                        <label><input type="radio" name="would_return" value="probably"> Probably</label>
+                        <label><input type="radio" name="would_return" value="maybe"> Maybe</label>
+                        <label><input type="radio" name="would_return" value="probably_not"> Probably not</label>
+                        <label><input type="radio" name="would_return" value="definitely_not"> Definitely not</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <label>Would you refer a friend to Starting Strength Gyms?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="would_refer" value="definitely" required> Definitely</label>
+                        <label><input type="radio" name="would_refer" value="probably"> Probably</label>
+                        <label><input type="radio" name="would_refer" value="maybe"> Maybe</label>
+                        <label><input type="radio" name="would_refer" value="probably_not"> Probably not</label>
+                        <label><input type="radio" name="would_refer" value="definitely_not"> Definitely not</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <label>Under what circumstances would you have kept your membership?</label>
+                    <textarea name="retention_circumstances" placeholder="Please describe what changes or circumstances would have encouraged you to continue your membership..." required></textarea>
+                </div>
+                
+                <div class="question">
+                    <label class="optional-note">Any additional comments or suggestions?</label>
+                    <textarea name="additional_comments" placeholder="Please share any other feedback that would help us improve..."></textarea>
+                </div>
+            </div>
+
+            <div class="submit-section">
+                <button type="submit" class="submit-btn">Submit Survey</button>
+                <p style="margin-top: 15px; color: var(--ss-gray); font-size: 0.9em;">
+                    Thank you for taking the time to help us improve. Your feedback is valuable to us.
+                </p>
+            </div>
+        </form>
+    </div>
+
+    <script src="form-handler.js"></script>
+</body>
+</html>
