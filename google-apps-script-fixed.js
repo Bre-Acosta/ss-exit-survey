@@ -1,13 +1,9 @@
-// Google Apps Script for Starting Strength Memphis Exit Survey
-// Deploy this as a web app to receive form data
-// Make sure to deploy with "Execute as: Me" and "Who has access: Anyone"
-
 function doPost(e) {
   try {
     // Open the specific spreadsheet by ID
-    const spreadsheetId = '1UhX-e50tpkZ0bRpPFVGM8h6vPQgBDo7hQWDPi3UDIIY';
-    const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
-    let sheet = spreadsheet.getActiveSheet();
+    var spreadsheetId = '1UhX-e50tpkZ0bRpPFVGM8h6vPQgBDo7hQWDPi3UDIIY';
+    var spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+    var sheet = spreadsheet.getActiveSheet();
     
     // Set sheet name if it's not already named
     if (sheet.getName() === 'Sheet1') {
@@ -15,14 +11,14 @@ function doPost(e) {
     }
     
     // Parse the form data
-    let data;
+    var data;
     
-    if (e.postData.type === 'application/json') {
+    if (e.postData && e.postData.type === 'application/json') {
       // Handle JSON data (for fetch requests)
       data = JSON.parse(e.postData.contents);
     } else {
       // Handle form-encoded data (for form submissions)
-      const params = e.parameter || {};
+      var params = e.parameter || {};
       if (params.data) {
         data = JSON.parse(params.data);
       } else {
@@ -33,17 +29,10 @@ function doPost(e) {
     
     // If this is the first submission, create headers
     if (sheet.getLastRow() === 0) {
-      const headers = [
+      var headers = [
         'Timestamp',
-        'Overall Experience',
-        'Overall Experience Other',
         'Value Perception',
         'Value Perception Comments',
-        'Expectations - Coaching',
-        'Expectations - Results',
-        'Expectations - Program',
-        'Expectations - Facility',
-        'Expectations - Community',
         'Cancellation Reasons',
         'Cancellation Reason Other',
         'Would Return',
@@ -54,24 +43,17 @@ function doPost(e) {
       sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
       
       // Format header row with Starting Strength blue
-      const headerRange = sheet.getRange(1, 1, 1, headers.length);
+      var headerRange = sheet.getRange(1, 1, 1, headers.length);
       headerRange.setBackground('#00A3E1');
       headerRange.setFontColor('#FFFFFF');
       headerRange.setFontWeight('bold');
     }
     
     // Prepare the row data
-    const rowData = [
+    var rowData = [
       data.timestamp || new Date().toISOString(),
-      data.overall_experience || '',
-      data.overall_experience_other || '',
       data.value_perception || '',
       data.value_perception_comments || '',
-      data.expectations_coaching || '',
-      data.expectations_results || '',
-      data.expectations_program || '',
-      data.expectations_facility || '',
-      data.expectations_community || '',
       data.cancellation_reasons || '',
       data.cancellation_reason_other || '',
       data.would_return || '',
@@ -87,7 +69,7 @@ function doPost(e) {
     sheet.autoResizeColumns(1, sheet.getLastColumn());
     
     // Return success response with proper CORS headers
-    const output = ContentService.createTextOutput(JSON.stringify({
+    var output = ContentService.createTextOutput(JSON.stringify({
       status: 'success',
       message: 'Survey response recorded successfully',
       timestamp: new Date().toISOString()
@@ -100,7 +82,7 @@ function doPost(e) {
     console.error('Error processing survey submission:', error);
     
     // Return error response
-    const output = ContentService.createTextOutput(JSON.stringify({
+    var output = ContentService.createTextOutput(JSON.stringify({
       status: 'error',
       message: 'Failed to record survey response: ' + error.toString(),
       timestamp: new Date().toISOString()
@@ -113,7 +95,7 @@ function doPost(e) {
 
 function doGet(e) {
   // Handle GET requests for testing
-  const output = ContentService.createTextOutput(JSON.stringify({
+  var output = ContentService.createTextOutput(JSON.stringify({
     status: 'success',
     message: 'Starting Strength Memphis Exit Survey API is running',
     timestamp: new Date().toISOString()
@@ -125,17 +107,10 @@ function doGet(e) {
 
 // Test function to verify the script works
 function testSubmission() {
-  const testData = {
+  var testData = {
     timestamp: new Date().toISOString(),
-    overall_experience: 'good',
-    overall_experience_other: '',
     value_perception: 'mostly_yes',
     value_perception_comments: 'Great value for the coaching quality',
-    expectations_coaching: 'yes',
-    expectations_results: 'somewhat',
-    expectations_program: 'yes',
-    expectations_facility: 'yes',
-    expectations_community: 'yes',
     cancellation_reasons: 'scheduling_conflicts, too_expensive',
     cancellation_reason_other: '',
     would_return: 'maybe',
@@ -144,18 +119,18 @@ function testSubmission() {
     additional_comments: 'Great coaching staff, just need better scheduling!'
   };
   
-  const mockEvent = {
+  var mockEvent = {
     postData: {
       contents: JSON.stringify(testData)
     }
   };
   
-  const result = doPost(mockEvent);
+  var result = doPost(mockEvent);
   console.log('Test result:', result.getContent());
   
   // Also test direct spreadsheet access
   try {
-    const spreadsheet = SpreadsheetApp.openById('1UhX-e50tpkZ0bRpPFVGM8h6vPQgBDo7hQWDPi3UDIIY');
+    var spreadsheet = SpreadsheetApp.openById('1UhX-e50tpkZ0bRpPFVGM8h6vPQgBDo7hQWDPi3UDIIY');
     console.log('Spreadsheet access successful:', spreadsheet.getName());
   } catch (error) {
     console.error('Spreadsheet access failed:', error);
