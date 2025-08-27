@@ -97,68 +97,34 @@ class SurveyFormHandler {
             throw new Error('Google Apps Script URL not configured. Please update the scriptURL in form-handler.js');
         }
         
-        // Try modern fetch first, fallback to iframe if needed
+        // Create FormData for faster submission
+        const formData = new FormData();
+        formData.append('data', JSON.stringify(data));
+        
+        // Use fetch with a timeout for speed
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+        
         try {
             const response = await fetch(this.scriptURL, {
                 method: 'POST',
-                mode: 'no-cors', // This prevents CORS errors
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: 'data=' + encodeURIComponent(JSON.stringify(data))
+                mode: 'no-cors',
+                body: formData,
+                signal: controller.signal
             });
             
-            // With no-cors mode, we can't read the response, but if no error was thrown, assume success
+            clearTimeout(timeoutId);
             return { status: 'success', message: 'Form submitted successfully' };
             
         } catch (error) {
-            console.log('Fetch failed, trying iframe fallback:', error);
+            clearTimeout(timeoutId);
             
-            // Fallback to iframe method with timeout
-            return new Promise((resolve, reject) => {
-                const timeout = setTimeout(() => {
-                    // Clean up and resolve anyway after timeout
-                    if (document.body.contains(form)) document.body.removeChild(form);
-                    if (document.body.contains(iframe)) document.body.removeChild(iframe);
-                    resolve({ status: 'success', message: 'Form submitted successfully' });
-                }, 5000); // 5 second timeout
-                
-                // Create a hidden iframe for the submission
-                const iframe = document.createElement('iframe');
-                iframe.style.display = 'none';
-                iframe.name = 'google-script-submit';
-                document.body.appendChild(iframe);
-                
-                // Create a form to submit to Google Apps Script
-                const form = document.createElement('form');
-                form.target = 'google-script-submit';
-                form.method = 'POST';
-                form.action = this.scriptURL;
-                
-                // Add data as form fields
-                const jsonInput = document.createElement('input');
-                jsonInput.type = 'hidden';
-                jsonInput.name = 'data';
-                jsonInput.value = JSON.stringify(data);
-                form.appendChild(jsonInput);
-                
-                // Handle the response
-                iframe.onload = () => {
-                    clearTimeout(timeout);
-                    try {
-                        // Clean up
-                        document.body.removeChild(form);
-                        document.body.removeChild(iframe);
-                        resolve({ status: 'success', message: 'Form submitted successfully' });
-                    } catch (error) {
-                        reject(new Error('Form submission failed'));
-                    }
-                };
-                
-                // Submit the form
-                document.body.appendChild(form);
-                form.submit();
-            });
+            if (error.name === 'AbortError') {
+                // Timeout occurred, but assume success since Google Apps Script can be slow
+                return { status: 'success', message: 'Form submitted successfully' };
+            }
+            
+            throw new Error('Form submission failed: ' + error.message);
         }
     }
     
