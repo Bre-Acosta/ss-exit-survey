@@ -28,7 +28,6 @@
         }
 
         .header {
-            background-color: var(--ss-black);
             padding: 20px 0;
             text-align: center;
         }
@@ -216,6 +215,7 @@
             }
         }
     </style>
+    
 </head>
 <body>
     <header class="header">
@@ -225,29 +225,14 @@
     <div class="container">
         <div class="intro">
             <h1>Member Feedback Survey</h1>
-            <p>We value your feedback and would appreciate a few minutes of your time to help us improve our services for future members. Your responses are completely confidential and will help us enhance the Starting Strength Memphis experience.</p>
+            <p>Your feedback matters. By answering a few questions you will help us build a better experience for the people of our community. Your responses are completely confidential.</p>
         </div>
 
         <form class="survey-form" id="exitSurvey">
-            <!-- Section 1: Overall Experience -->
+            
+            <!-- Section 1: Value Perception -->
             <div class="section">
-                <h2>1. Overall Experience</h2>
-                
-                <div class="question">
-                    <label>How would you describe your overall experience with us?</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="overall_experience" value="excellent" required> Excellent</label>
-                        <label><input type="radio" name="overall_experience" value="good"> Good</label>
-                        <label><input type="radio" name="overall_experience" value="fair"> Fair</label>
-                        <label><input type="radio" name="overall_experience" value="poor"> Poor</label>
-                        <label><input type="radio" name="overall_experience" value="other"> Other (please specify): <input type="text" name="overall_experience_other" style="margin-left: 10px; width: 200px;"></label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section 2: Value Perception -->
-            <div class="section">
-                <h2>2. Value Perception</h2>
+                <h2>1. Value Perception</h2>
                 
                 <div class="question">
                     <label>Did you feel the service was valuable for the price you paid?</label>
@@ -266,66 +251,11 @@
                 </div>
             </div>
 
-            <!-- Section 3: Expectations -->
-            <div class="section">
-                <h2>3. Expectations</h2>
-                
-                <div class="question">
-                    <label>Were your expectations met in the following areas?</label>
-                    <table class="matrix-table">
-                        <thead>
-                            <tr>
-                                <th>Area</th>
-                                <th>Yes</th>
-                                <th>Somewhat</th>
-                                <th>No</th>
-                                <th>N/A</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Coaching attention / personalization</td>
-                                <td><input type="radio" name="expectations_coaching" value="yes"></td>
-                                <td><input type="radio" name="expectations_coaching" value="somewhat"></td>
-                                <td><input type="radio" name="expectations_coaching" value="no"></td>
-                                <td><input type="radio" name="expectations_coaching" value="na"></td>
-                            </tr>
-                            <tr>
-                                <td>Physical results / progress</td>
-                                <td><input type="radio" name="expectations_results" value="yes"></td>
-                                <td><input type="radio" name="expectations_results" value="somewhat"></td>
-                                <td><input type="radio" name="expectations_results" value="no"></td>
-                                <td><input type="radio" name="expectations_results" value="na"></td>
-                            </tr>
-                            <tr>
-                                <td>Program structure & pacing</td>
-                                <td><input type="radio" name="expectations_program" value="yes"></td>
-                                <td><input type="radio" name="expectations_program" value="somewhat"></td>
-                                <td><input type="radio" name="expectations_program" value="no"></td>
-                                <td><input type="radio" name="expectations_program" value="na"></td>
-                            </tr>
-                            <tr>
-                                <td>Facility and equipment</td>
-                                <td><input type="radio" name="expectations_facility" value="yes"></td>
-                                <td><input type="radio" name="expectations_facility" value="somewhat"></td>
-                                <td><input type="radio" name="expectations_facility" value="no"></td>
-                                <td><input type="radio" name="expectations_facility" value="na"></td>
-                            </tr>
-                            <tr>
-                                <td>Community and atmosphere</td>
-                                <td><input type="radio" name="expectations_community" value="yes"></td>
-                                <td><input type="radio" name="expectations_community" value="somewhat"></td>
-                                <td><input type="radio" name="expectations_community" value="no"></td>
-                                <td><input type="radio" name="expectations_community" value="na"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            
 
-            <!-- Section 4: Additional Questions -->
+            <!-- Section 2: Additional Questions -->
             <div class="section">
-                <h2>4. Additional Feedback</h2>
+                <h2>2. Additional Feedback</h2>
                 
                 <div class="question">
                     <label>What were the reasons for canceling your membership? (Select all that apply)</label>
