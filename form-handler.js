@@ -22,11 +22,9 @@ class SurveyFormHandler {
         try {
             // Collect form data
             const formData = this.collectFormData();
-            console.log('Collected form data:', formData);
             
             // Validate required fields
             if (!this.validateForm(formData)) {
-                console.log('Validation failed for required fields');
                 throw new Error('Please complete all required fields.');
             }
             
@@ -86,9 +84,7 @@ class SurveyFormHandler {
         ];
         
         for (let field of requiredFields) {
-            console.log(`Checking field ${field}:`, data[field]);
             if (!data[field] || data[field].trim() === '') {
-                console.log(`Field ${field} is missing or empty`);
                 return false;
             }
         }
@@ -101,43 +97,69 @@ class SurveyFormHandler {
             throw new Error('Google Apps Script URL not configured. Please update the scriptURL in form-handler.js');
         }
         
-        // Use form submission method instead of fetch to avoid CORS
-        return new Promise((resolve, reject) => {
-            // Create a hidden iframe for the submission
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.name = 'google-script-submit';
-            document.body.appendChild(iframe);
+        // Try modern fetch first, fallback to iframe if needed
+        try {
+            const response = await fetch(this.scriptURL, {
+                method: 'POST',
+                mode: 'no-cors', // This prevents CORS errors
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'data=' + encodeURIComponent(JSON.stringify(data))
+            });
             
-            // Create a form to submit to Google Apps Script
-            const form = document.createElement('form');
-            form.target = 'google-script-submit';
-            form.method = 'POST';
-            form.action = this.scriptURL;
+            // With no-cors mode, we can't read the response, but if no error was thrown, assume success
+            return { status: 'success', message: 'Form submitted successfully' };
             
-            // Add data as form fields
-            const jsonInput = document.createElement('input');
-            jsonInput.type = 'hidden';
-            jsonInput.name = 'data';
-            jsonInput.value = JSON.stringify(data);
-            form.appendChild(jsonInput);
+        } catch (error) {
+            console.log('Fetch failed, trying iframe fallback:', error);
             
-            // Handle the response
-            iframe.onload = () => {
-                try {
-                    // Clean up
-                    document.body.removeChild(form);
-                    document.body.removeChild(iframe);
+            // Fallback to iframe method with timeout
+            return new Promise((resolve, reject) => {
+                const timeout = setTimeout(() => {
+                    // Clean up and resolve anyway after timeout
+                    if (document.body.contains(form)) document.body.removeChild(form);
+                    if (document.body.contains(iframe)) document.body.removeChild(iframe);
                     resolve({ status: 'success', message: 'Form submitted successfully' });
-                } catch (error) {
-                    reject(new Error('Form submission failed'));
-                }
-            };
-            
-            // Submit the form
-            document.body.appendChild(form);
-            form.submit();
-        });
+                }, 5000); // 5 second timeout
+                
+                // Create a hidden iframe for the submission
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.name = 'google-script-submit';
+                document.body.appendChild(iframe);
+                
+                // Create a form to submit to Google Apps Script
+                const form = document.createElement('form');
+                form.target = 'google-script-submit';
+                form.method = 'POST';
+                form.action = this.scriptURL;
+                
+                // Add data as form fields
+                const jsonInput = document.createElement('input');
+                jsonInput.type = 'hidden';
+                jsonInput.name = 'data';
+                jsonInput.value = JSON.stringify(data);
+                form.appendChild(jsonInput);
+                
+                // Handle the response
+                iframe.onload = () => {
+                    clearTimeout(timeout);
+                    try {
+                        // Clean up
+                        document.body.removeChild(form);
+                        document.body.removeChild(iframe);
+                        resolve({ status: 'success', message: 'Form submitted successfully' });
+                    } catch (error) {
+                        reject(new Error('Form submission failed'));
+                    }
+                };
+                
+                // Submit the form
+                document.body.appendChild(form);
+                form.submit();
+            });
+        }
     }
     
     showSuccessMessage() {
