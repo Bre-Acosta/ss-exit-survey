@@ -1,4 +1,4 @@
-lass SurveyFormHandler {
+class SurveyFormHandler {
     constructor() {
         // Replace with your deployed Google Apps Script web app URL
         this.scriptURL = 'https://script.google.com/macros/s/AKfycbwwv_GWgi9Joy5DcjJbzi4NvoQ-sbhwISzFu01Yy3PjvNxQ59cThIbv9k6_MPibdsUSpw/exec';
@@ -22,9 +22,11 @@ lass SurveyFormHandler {
         try {
             // Collect form data
             const formData = this.collectFormData();
+            console.log('Collected form data:', formData);
             
             // Validate required fields
             if (!this.validateForm(formData)) {
+                console.log('Validation failed for required fields');
                 throw new Error('Please complete all required fields.');
             }
             
@@ -84,7 +86,9 @@ lass SurveyFormHandler {
         ];
         
         for (let field of requiredFields) {
+            console.log(`Checking field ${field}:`, data[field]);
             if (!data[field] || data[field].trim() === '') {
+                console.log(`Field ${field} is missing or empty`);
                 return false;
             }
         }
