@@ -1,7 +1,7 @@
 class SurveyFormHandler {
     constructor() {
         // Replace with your deployed Google Apps Script web app URL
-        this.scriptURL = 'https://script.google.com/macros/s/AKfycbwwv_GWgi9Joy5DcjJbzi4NvoQ-sbhwISzFu01Yy3PjvNxQ59cThIbv9k6_MPibdsUSpw/exec';
+        this.scriptURL = 'https://script.google.com/macros/s/AKfycbxjeoxwooKMKt35zCMFU8sZW-etO5mumIqVlm4wPhz8cqGmNiv4jDIMjb5NS-sMxBY9sA/exec';
         this.form = document.getElementById('exitSurvey');
         this.submitBtn = document.querySelector('.submit-btn');
         this.init();
@@ -72,6 +72,10 @@ class SurveyFormHandler {
         
         // Add timestamp
         data.timestamp = new Date().toISOString();
+        
+        // Debug: log what we're sending
+        console.log('Form data being sent to Google Sheets:', data);
+        console.log('Number of fields:', Object.keys(data).length);
         
         return data;
     }
